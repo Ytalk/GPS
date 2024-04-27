@@ -20,20 +20,16 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 
-
 public class MainActivity extends AppCompatActivity {
-
-
-    TextView textViewCoordinates = findViewById(R.id.textViewCoordinates);
-
-
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-
+    private TextView textViewCoordinates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        textViewCoordinates = findViewById(R.id.textViewCoordinates);
 
         // Verifique se as permissões de localização foram concedidas
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
@@ -49,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
             accessLocation();
         }
     }
-
 
 
 
@@ -70,32 +65,41 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
     // Método para acessar a localização
     private void accessLocation() {
-        // Implemente aqui o código para acessar a localização do dispositivo
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // Verifique se as permissões de localização foram concedidas
+        boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null) {
-                        // Aqui você obtém a localização atual do dispositivo
-                        double latitude = location.getLatitude();
-                        double longitude = location.getLongitude();
-
-                        String coordinatesText = "Latitude: " + latitude + ", Longitude: " + longitude;
-                        textViewCoordinates.setText(coordinatesText);
-                    }
-                    else {
-                        textViewCoordinates.setText("Localização não disponível");
-                    }
-                });
-
-                /*.addOnFailureListener(this, e -> {
-                    // Trate o erro aqui, por exemplo, mostre uma mensagem ao usuário
-                });*/
-
+        if (hasFineLocationPermission || hasCoarseLocationPermission) {
+            try {
+                // Tente obter a última localização
+                FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(this, location -> {
+                            if (location != null) {
+                                double latitude = location.getLatitude();
+                                double longitude = location.getLongitude();
+                                String coordinatesText = "Latitude: " + latitude + ", Longitude: " + longitude;
+                                textViewCoordinates.setText(coordinatesText);
+                            } else {
+                                textViewCoordinates.setText("Localização não disponível");
+                            }
+                        })
+                        .addOnFailureListener(this, e -> {
+                            // Trate o erro aqui, por exemplo, mostre uma mensagem ao usuário
+                            textViewCoordinates.setText("Erro ao obter a localização: " + e.getMessage());
+                        });
+            } catch (SecurityException e) {
+                // Trate a exceção de segurança
+                textViewCoordinates.setText("Erro de permissão: " + e.getMessage());
+            }
+        } else {
+            // Caso as permissões não tenham sido concedidas, trate a falta de permissão
+            textViewCoordinates.setText("Permissões de localização não concedidas");
+        }
     }
+
+
 
 }
