@@ -1,5 +1,6 @@
 package com.teleport;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private TextView textViewCoordinates;
     private GoogleMap mMap;
+    private RealTimeLocationUpdater locationUpdater;
 
 
     @Override
@@ -156,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(userLocation).title("Você está aqui"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+
+                    locationUpdater = new RealTimeLocationUpdater(this, mMap);
+                    locationUpdater.startLocationUpdates();
                 }
             });
             } catch (SecurityException e) {
