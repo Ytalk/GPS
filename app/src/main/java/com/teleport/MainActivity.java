@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView textViewCoordinates;
     private GoogleMap mMap;
     private RealTimeLocationUpdater locationUpdater;
+    private MapOrientationListener mapOrientation;
+    private Marker userMarker;
 
 
     @Override
@@ -156,11 +159,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     textViewCoordinates.setText(coordinatesText);
 
                     LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(userLocation).title("Você está aqui"));
+
+                    // Crie um marcador para o usuário
+                    MarkerOptions userMarkerOptions = new MarkerOptions().position(userLocation).title("Você está aqui");
+                    userMarker = mMap.addMarker(userMarkerOptions);
+
+                    //mMap.addMarker(userMarkerOptions);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
 
                     locationUpdater = new RealTimeLocationUpdater(this, mMap);
                     locationUpdater.startLocationUpdates();
+
+                    mapOrientation = new MapOrientationListener(this, mMap, userMarker);
+                    mapOrientation.start();
                 }
             });
             } catch (SecurityException e) {

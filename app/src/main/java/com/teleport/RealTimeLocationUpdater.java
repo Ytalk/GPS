@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -63,9 +64,19 @@ public class RealTimeLocationUpdater {
     // Atualiza a localização do usuário no mapa
     private void updateMapLocation(Location location) {
         if (location != null) {
+            // Armazene o estado de zoom atual
+            float currentZoom = googleMap.getCameraPosition().zoom;
+
+            // Crie uma posição de câmera com a nova localização, mas mantenha o zoom atual
             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
-            // Adicione um marcador para a localização do usuário se desejar
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(userLocation)
+                    .zoom(currentZoom) // Mantenha o zoom atual
+                    .build();
+
+            // Atualize a câmera para a nova posição
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
 }
