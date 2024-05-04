@@ -41,4 +41,6 @@ dependencies {
 
     // Dependência do Google Maps SDK
     implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.maps:google-maps-services:0.9.3")
+
 }

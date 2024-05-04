@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -35,6 +36,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private RealTimeLocationUpdater locationUpdater;
     private MapOrientationListener mapOrientation;
     private Marker userMarker;
+    private RouteManager routeManager;
+    private double latitude;
+    private double longitude;
+    private static final int REQUEST_CODE_WIFI_PERMISSION = 2;  // Escolha um número inteiro único
+
 
 
     @Override
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             // Se as permissões não foram concedidas, solicite-as
 
-            textViewCoordinates.setText("null0");
+            textViewCoordinates.setText("Permissões de localização não concedidas");
 
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -58,14 +64,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         else {
             // Permissões já concedidas, pode acessar a localização
-            //accessLocation();
             boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
             boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-            textViewCoordinates.setText("null1");
             if (hasFineLocationPermission || hasCoarseLocationPermission) {
-                textViewCoordinates.setText("null2");
-
                 SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                 if (mapFragment != null) {
                     mapFragment.getMapAsync(this);
@@ -77,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+
+
     // Método para lidar com a resposta às solicitações de permissão
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -84,17 +88,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permissão concedida
-                //accessLocation();
-
                 SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                 mapFragment.getMapAsync(this);
 
+                if (requestCode == REQUEST_CODE_WIFI_PERMISSION) {
+                    // Adicione aqui a lógica para lidar com a permissão de acesso ao Wi-Fi (se necessário)
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        // Permissão concedida para acesso ao Wi-Fi
+                        // Continue com a lógica necessária
+                    } else {
+                        // Permissão negada para acesso ao Wi-Fi
+                        // Adicione lógica para tratar a permissão negada, se necessário
+                    }
+                }
+
             } else {
                 // Permissão negada
-                // Lidar com a falta de permissão aqui
             }
         }
+
+
+
+    //private void showPermissionDeniedMessage(String message) {
+        // Exiba uma mensagem ao usuário para informar que a permissão foi negada
+        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
 
 
 
@@ -137,10 +156,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        textViewCoordinates.setText("null3");
-
         mMap = googleMap;
-
         // Personalize o mapa aqui, por exemplo, defina o tipo de mapa
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -153,8 +169,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
                     String coordinatesText = "Latitude: " + latitude + ", Longitude: " + longitude;
                     textViewCoordinates.setText(coordinatesText);
 
@@ -172,6 +188,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     mapOrientation = new MapOrientationListener(this, mMap, userMarker);
                     mapOrientation.start();
+
+                    routeManager = new RouteManager(mMap, "key");
+
+                    //LatLng origin = locationUpdater.getCurrentLocation(); // Implementar a função para obter a localização atual
+                    //LatLng destination = new LatLng(-30.0330600, -51.2300000);
+                    //routeManager.drawRoute(origin, destination);
                 }
             });
             } catch (SecurityException e) {
@@ -179,11 +201,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 textViewCoordinates.setText("Erro de permissão: " + e.getMessage());
             }
         }
-        else {
-            textViewCoordinates.setText("bah");
-        }
-
-
     }
 
 }

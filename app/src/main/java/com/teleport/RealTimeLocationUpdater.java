@@ -23,6 +23,7 @@ public class RealTimeLocationUpdater {
     private final LocationRequest locationRequest;
     private final LocationCallback locationCallback;
     private final Context context;
+    private LatLng userLocation;
 
     public RealTimeLocationUpdater(Context context, GoogleMap googleMap) {
         this.context = context;
@@ -68,7 +69,8 @@ public class RealTimeLocationUpdater {
             float currentZoom = googleMap.getCameraPosition().zoom;
 
             // Crie uma posição de câmera com a nova localização, mas mantenha o zoom atual
-            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+            userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(userLocation)
@@ -79,5 +81,11 @@ public class RealTimeLocationUpdater {
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
+
+    public LatLng getCurrentLocation(){
+        return userLocation;
+    }
+
+
 }
 
