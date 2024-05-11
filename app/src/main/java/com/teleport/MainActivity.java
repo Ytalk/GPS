@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-
-
     // Método para lidar com a resposta às solicitações de permissão
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -91,65 +89,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                 mapFragment.getMapAsync(this);
 
-                if (requestCode == REQUEST_CODE_WIFI_PERMISSION) {
-                    // Adicione aqui a lógica para lidar com a permissão de acesso ao Wi-Fi (se necessário)
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        // Permissão concedida para acesso ao Wi-Fi
-                        // Continue com a lógica necessária
-                    } else {
-                        // Permissão negada para acesso ao Wi-Fi
-                        // Adicione lógica para tratar a permissão negada, se necessário
-                    }
-                }
-
             } else {
                 // Permissão negada
             }
         }
 
-
-
-    //private void showPermissionDeniedMessage(String message) {
-        // Exiba uma mensagem ao usuário para informar que a permissão foi negada
-        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-
-
-
-    // Método para acessar a localização
-    private void accessLocation() {
-        // Verifique se as permissões de localização foram concedidas
-        boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-
-        if (hasFineLocationPermission || hasCoarseLocationPermission) {
-            try {
-                // Tente obter a última localização
-                FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, location -> {
-                            if (location != null) {
-                                double latitude = location.getLatitude();
-                                double longitude = location.getLongitude();
-                                String coordinatesText = "Latitude: " + latitude + ", Longitude: " + longitude;
-                                textViewCoordinates.setText(coordinatesText);
-                            } else {
-                                textViewCoordinates.setText("Localização não disponível");
-                            }
-                        })
-                        .addOnFailureListener(this, e -> {
-                            // Trate o erro aqui, por exemplo, mostre uma mensagem ao usuário
-                            textViewCoordinates.setText("Erro ao obter a localização: " + e.getMessage());
-                        });
-            } catch (SecurityException e) {
-                // Trate a exceção de segurança
-                textViewCoordinates.setText("Erro de permissão: " + e.getMessage());
-            }
-        } else {
-            // Caso as permissões não tenham sido concedidas, trate a falta de permissão
-            textViewCoordinates.setText("Permissões de localização não concedidas");
-        }
     }
 
 
@@ -189,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mapOrientation = new MapOrientationListener(this, mMap, userMarker);
                     mapOrientation.start();
 
-                    routeManager = new RouteManager(mMap, "key");
+                    //routeManager = new RouteManager(mMap, "key");
 
                     //LatLng origin = locationUpdater.getCurrentLocation(); // Implementar a função para obter a localização atual
                     //LatLng destination = new LatLng(-30.0330600, -51.2300000);

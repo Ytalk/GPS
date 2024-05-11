@@ -23,6 +23,7 @@ public class RouteManager {
 
     public RouteManager(GoogleMap map, String apiKey) {
         mMap = map;
+
         geoApiContext = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();

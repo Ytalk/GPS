@@ -52,8 +52,6 @@ public class RealTimeLocationUpdater {
     public void startLocationUpdates() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-        } else {
-            // Solicite permissões de localização se não estiverem concedidas
         }
     }
 
@@ -67,8 +65,6 @@ public class RealTimeLocationUpdater {
         if (location != null) {
             // Armazene o estado de zoom atual
             float currentZoom = googleMap.getCameraPosition().zoom;
-
-            // Crie uma posição de câmera com a nova localização, mas mantenha o zoom atual
 
             userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -88,4 +84,3 @@ public class RealTimeLocationUpdater {
 
 
 }
-
