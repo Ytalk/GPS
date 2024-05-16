@@ -6,16 +6,19 @@ import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private RouteManager routeManager;
     private double latitude;
     private double longitude;
-    private static final int REQUEST_CODE_WIFI_PERMISSION = 2;  // Escolha um número inteiro único
+    private View view;
+
 
 
 
@@ -138,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //LatLng origin = locationUpdater.getCurrentLocation(); // Implementar a função para obter a localização atual
                     //LatLng destination = new LatLng(-30.0330600, -51.2300000);
                     //routeManager.drawRoute(origin, destination);
+
+                    //openNavDrawer(view);
                 }
             });
             } catch (SecurityException e) {
@@ -146,5 +152,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
+
+    public void openNavDrawer(View view) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.openDrawer(GravityCompat.START);
+    }
+
 
 }
