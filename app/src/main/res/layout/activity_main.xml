@@ -8,40 +8,6 @@
     tools:context=".MainActivity">
 
 
-    <!-- AppBarLayout -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
-
-            <!-- Botão Abrir Menu -->
-            <Button
-                android:id="@+id/btn_open_nav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Abrir Menu"
-                android:onClick="openNavDrawer" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Teleport"
-                android:textAlignment="center"
-                android:textColorLink="#2FE3D3"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
 
     <!-- Conteúdo principal -->
     <LinearLayout
@@ -49,7 +15,43 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- TextViews, fragmentos, etc. -->
+
+        <!-- AppBarLayout -->
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Toolbar -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/orange">
+
+                <!-- ImageButton para abrir o menu -->
+                <ImageButton
+                    android:id="@+id/btn_open_nav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/menu_lines_hamburger_icon24"
+                    android:contentDescription="Abrir Menu"
+                    android:onClick="openNavDrawer" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Teleport"
+                    android:textAlignment="center"
+                    android:textColorLink="#2FE3D3"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
 
         <TextView

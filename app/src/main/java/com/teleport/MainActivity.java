@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double latitude;
     private double longitude;
     private View view;
+    private LatLng userLocation;
 
 
 
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     String coordinatesText = "Latitude: " + latitude + ", Longitude: " + longitude;
                     textViewCoordinates.setText(coordinatesText);
 
-                    LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
                     // Crie um marcador para o usuário
                     MarkerOptions userMarkerOptions = new MarkerOptions().position(userLocation).title("Você está aqui");
@@ -137,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mapOrientation = new MapOrientationListener(this, mMap, userMarker);
                     mapOrientation.start();
 
-                    //routeManager = new RouteManager(mMap, "key");
+                    routeManager = new RouteManager(mMap,"key");
 
                     //LatLng origin = locationUpdater.getCurrentLocation(); // Implementar a função para obter a localização atual
-                    //LatLng destination = new LatLng(-30.0330600, -51.2300000);
-                    //routeManager.drawRoute(origin, destination);
+                    LatLng destination = new LatLng(-30.0330600, -51.2300000);
+                    routeManager.drawRoute(userLocation, destination);
 
                     //openNavDrawer(view);
                 }

@@ -30,7 +30,7 @@ public class RouteManager {
     }
 
 
-    /*public void drawRoute(LatLng origin, LatLng destination) {
+    public void drawRoute(LatLng origin, LatLng destination) {
         // Execute a solicitação de rota em uma tarefa assíncrona para não bloquear a thread principal
         new RouteTask().execute(origin, destination);
     }
@@ -77,7 +77,7 @@ public class RouteManager {
             path.add(new LatLng(point.lat, point.lng));
         }
         return path;
-    }*/
+    }
 
 
 }

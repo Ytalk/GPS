@@ -43,4 +43,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("com.google.maps:google-maps-services:0.9.3")
 
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3") // Atualize para a última versão estável
+
 }
