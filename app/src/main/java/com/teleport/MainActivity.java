@@ -31,6 +31,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
@@ -44,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double longitude;
     private View view;
     private LatLng userLocation;
+    private BusStopManager busStopManager;
 
 
 
@@ -108,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         // Personalize o mapa aqui, por exemplo, defina o tipo de mapa
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        busStopManager = new BusStopManager(this, mMap);
+
 
         // Habilite o botão de localização do usuário no mapa
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -124,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     textViewCoordinates.setText(coordinatesText);
 
                     userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    busStopManager.findBusStops(userLocation, 10000);
 
                     // Crie um marcador para o usuário
                     MarkerOptions userMarkerOptions = new MarkerOptions().position(userLocation).title("Você está aqui");
