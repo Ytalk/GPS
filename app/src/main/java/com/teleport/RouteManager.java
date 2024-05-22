@@ -31,7 +31,7 @@ public class RouteManager {
 
 
     public void drawRoute(LatLng origin, LatLng destination) {
-        // Execute a solicitação de rota em uma tarefa assíncrona para não bloquear a thread principal
+        //solicitação de rota em uma tarefa assíncrona para não bloquear a thread principal
         new RouteTask().execute(origin, destination);
     }
 
@@ -43,7 +43,7 @@ public class RouteManager {
             LatLng destination = params[1];
 
             try {
-                // Obtenha os resultados da rota da API Directions
+                //resultados da rota da API Directions
                 return DirectionsApi.newRequest(geoApiContext)
                         .origin(new com.google.maps.model.LatLng(origin.latitude, origin.longitude))
                         .destination(new com.google.maps.model.LatLng(destination.latitude, destination.longitude))
@@ -64,7 +64,7 @@ public class RouteManager {
                             .color(Color.BLUE));
                 }
             } else {
-                // Mensagem de erro para o usuário ou log
+                //erro para o usuário ou log
             }
         }
 

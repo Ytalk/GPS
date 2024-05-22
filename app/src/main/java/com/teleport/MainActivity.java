@@ -56,12 +56,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private RouteManager routeManager;
     private double latitude;
     private double longitude;
-    private View view;
     private LatLng userLocation;
     private BusStopManager busStopManager;
     private PlaceSearchManager placeSearchManager;
     private SearchView searchView;
-
+    private String apiKey = "key";
 
 
 
@@ -71,34 +70,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         textViewCoordinates = findViewById(R.id.textViewCoordinates);
+        textViewCoordinates.setText("Permissões de localização não concedidas");
 
         // Verifique se as permissões de localização foram concedidas
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             // Se as permissões não foram concedidas, solicite-as
 
-            textViewCoordinates.setText("Permissões de localização não concedidas");
-
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
             }, REQUEST_CODE_LOCATION_PERMISSION);
+
         }
         else {
             // Permissões já concedidas, pode acessar a localização
-            boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-            boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-            if (hasFineLocationPermission || hasCoarseLocationPermission) {
-                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-                if (mapFragment != null) {
-                    mapFragment.getMapAsync(this);
-                }
-            }
 
             // Configurar a Toolbar
             androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
+
+            placeSearchManager = new PlaceSearchManager(this, mMap, apiKey);
 
             //inicializar o SearchView
             searchView = findViewById(R.id.search_view);
@@ -118,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                 mapFragment.getMapAsync(this);
 
-            } else {
+            }
+            else {
                 // Permissão negada
             }
         }
@@ -132,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         // Personalize o mapa aqui, por exemplo, defina o tipo de mapa
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        busStopManager = new BusStopManager(this, mMap);
 
 
         // Habilite o botão de localização do usuário no mapa
@@ -146,18 +139,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (location != null) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
+
                     String coordinatesText = "Latitude: " + latitude + ", Longitude: " + longitude;
                     textViewCoordinates.setText(coordinatesText);
 
-                    userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    userLocation = new LatLng(latitude, longitude);
 
-                    busStopManager.findBusStops(userLocation, 10000);
 
-                    // Crie um marcador para o usuário
+                    busStopManager = new BusStopManager(this, mMap);
+                    busStopManager.findBusStops(userLocation, 10000, apiKey);
+
+                    //crie um marcador para o usuário
                     MarkerOptions userMarkerOptions = new MarkerOptions().position(userLocation).title("Você está aqui");
                     userMarker = mMap.addMarker(userMarkerOptions);
 
-                    //mMap.addMarker(userMarkerOptions);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
 
                     locationUpdater = new RealTimeLocationUpdater(this, mMap);
@@ -166,17 +161,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mapOrientation = new MapOrientationListener(this, mMap, userMarker);
                     mapOrientation.start();
 
-                    // Inicializar o PlaceSearchManager
-                    String apiKey = "44"; // Substitua pela sua chave de API
-                    placeSearchManager = new PlaceSearchManager(this, mMap, apiKey);
 
                     routeManager = new RouteManager(mMap, apiKey);
 
-                    //LatLng origin = locationUpdater.getCurrentLocation(); // Implementar a função para obter a localização atual
+                    //LatLng origin = locationUpdater.getCurrentLocation();
                     LatLng destination = new LatLng(-30.0330600, -51.2300000);
                     routeManager.drawRoute(userLocation, destination);
 
-                    //openNavDrawer(view);
                 }
             });
             } catch (SecurityException e) {
@@ -190,14 +181,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void openNavDrawer(View view) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.openDrawer(GravityCompat.START);
-    }
-
-
-    public void addMarkerOnMap(LatLng latLng, String title) {
-        if (mMap != null) {
-            mMap.addMarker(new MarkerOptions().position(latLng).title(title));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
-        }
     }
 
 

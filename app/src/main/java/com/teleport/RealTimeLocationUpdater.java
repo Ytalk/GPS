@@ -30,12 +30,12 @@ public class RealTimeLocationUpdater {
         this.googleMap = googleMap;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 
-        // Crie uma solicitação de localização com a precisão desejada e intervalo de tempo
+        //crie uma solicitação de localização com a precisão desejada e intervalo de tempo
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000); // Atualizações a cada 5 segundos
+        locationRequest.setInterval(5000);//atualizações a cada 5 segundos
 
-        // Crie um LocationCallback para receber atualizações de localização
+        //LocationCallback para receber atualizações de localização
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -60,20 +60,22 @@ public class RealTimeLocationUpdater {
         fusedLocationClient.removeLocationUpdates(locationCallback);
     }
 
-    // Atualiza a localização do usuário no mapa
+    //atualiza a localização do usuário no mapa
     private void updateMapLocation(Location location) {
         if (location != null) {
             // Armazene o estado de zoom atual
             float currentZoom = googleMap.getCameraPosition().zoom;
+            float currentTilt = googleMap.getCameraPosition().tilt;
 
             userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(userLocation)
                     .zoom(currentZoom) // Mantenha o zoom atual
+                    .tilt(currentTilt)
                     .build();
 
-            // Atualize a câmera para a nova posição
+            //atualize a câmera para a nova posição
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }

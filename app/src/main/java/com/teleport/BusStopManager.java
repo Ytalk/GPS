@@ -30,10 +30,10 @@ public class BusStopManager {
         this.mMap = map;
     }
 
-    public void findBusStops(@NonNull LatLng location, int radius) {
+    public void findBusStops(@NonNull LatLng location, int radius, String apiKey) {
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
                 location.latitude + "," + location.longitude + "&radius=" + radius +
-                "&type=bus_station&key= key";
+                "&type=bus_station&key=" + apiKey;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -60,7 +60,7 @@ public class BusStopManager {
                             mMap.addMarker(new MarkerOptions()
                                     .position(busStopLatLng)
                                     .title(name)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(getBusStopIcon())));
+                                    .icon(BitmapDescriptorFactory.fromBitmap( getBusStopIcon() )));
                         });
                     }
                 } else {

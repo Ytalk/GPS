@@ -24,14 +24,12 @@ public class MapOrientationListener implements SensorEventListener {
         rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
     }
 
-    // Inicie o sensor de orientação
     public void start() {
         if (rotationSensor != null) {
             sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
-    // Pare o sensor de orientação
     public void stop() {
         sensorManager.unregisterListener(this);
     }
@@ -39,19 +37,19 @@ public class MapOrientationListener implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-            // Converta os dados de rotação para uma matriz de orientação
+            //converta os dados de rotação para uma matriz de orientação
             float[] orientationMatrix = new float[9];
             float[] orientationValues = new float[3];
             SensorManager.getRotationMatrixFromVector(orientationMatrix, event.values);
             SensorManager.getOrientation(orientationMatrix, orientationValues);
 
-            // Obtenha o azimute em radianos
+            //azimute em radianos
             float azimute = orientationValues[0];
 
-            // Converta o azimute de radianos para graus
+            //azimute de radianos para graus
             float azimuteDegrees = (float) Math.toDegrees(azimute);
 
-            // Atualize a rotação do marcador do usuário com base no azimute
+            //atualize a rotação do marcador do usuário com base no azimute
             if (userMarker != null) {
                 userMarker.setRotation(azimuteDegrees);
             }
@@ -61,6 +59,6 @@ public class MapOrientationListener implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Trate mudanças de precisão, se necessário
+        //mudanças de precisão, se necessário
     }
 }
