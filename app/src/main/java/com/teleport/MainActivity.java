@@ -12,13 +12,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -53,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private View view;
     private LatLng userLocation;
     private BusStopManager busStopManager;
+    private PlaceSearchManager placeSearchManager;
+    private SearchView searchView;
 
 
 
@@ -86,8 +94,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (mapFragment != null) {
                     mapFragment.getMapAsync(this);
                 }
-
             }
+
+            // Configurar a Toolbar
+            androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+            //inicializar o SearchView
+            searchView = findViewById(R.id.search_view);
+            setupSearchView();
         }
     }
 
@@ -151,7 +166,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mapOrientation = new MapOrientationListener(this, mMap, userMarker);
                     mapOrientation.start();
 
-                    routeManager = new RouteManager(mMap,"key");
+                    // Inicializar o PlaceSearchManager
+                    String apiKey = "44"; // Substitua pela sua chave de API
+                    placeSearchManager = new PlaceSearchManager(this, mMap, apiKey);
+
+                    routeManager = new RouteManager(mMap, apiKey);
 
                     //LatLng origin = locationUpdater.getCurrentLocation(); // Implementar a função para obter a localização atual
                     LatLng destination = new LatLng(-30.0330600, -51.2300000);
@@ -171,6 +190,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void openNavDrawer(View view) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.openDrawer(GravityCompat.START);
+    }
+
+
+    public void addMarkerOnMap(LatLng latLng, String title) {
+        if (mMap != null) {
+            mMap.addMarker(new MarkerOptions().position(latLng).title(title));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+        }
+    }
+
+
+
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                placeSearchManager.searchPlace(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
 

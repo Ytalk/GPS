@@ -38,7 +38,7 @@
                     android:contentDescription="Abrir Menu"
                     android:onClick="openNavDrawer" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,7 +47,15 @@
                     android:textColorLink="#2FE3D3"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold" />-->
+
+                <!-- SearchView -->
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:iconifiedByDefault="false"
+                    android:queryHint="Search places..." />
 
             </androidx.appcompat.widget.Toolbar>
 
