@@ -48,14 +48,12 @@ public class RealTimeLocationUpdater {
         };
     }
 
-    // Método para iniciar atualizações de localização
     public void startLocationUpdates() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
         }
     }
 
-    // Método para parar atualizações de localização
     public void stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback);
     }
@@ -63,16 +61,14 @@ public class RealTimeLocationUpdater {
     //atualiza a localização do usuário no mapa
     private void updateMapLocation(Location location) {
         if (location != null) {
-            // Armazene o estado de zoom atual
+            //armazene o estado de zoom atual
             float currentZoom = googleMap.getCameraPosition().zoom;
-            float currentTilt = googleMap.getCameraPosition().tilt;
 
             userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(userLocation)
-                    .zoom(currentZoom) // Mantenha o zoom atual
-                    .tilt(currentTilt)
+                    .zoom(currentZoom)
                     .build();
 
             //atualize a câmera para a nova posição

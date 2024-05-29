@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                     busStopManager = new BusStopManager(this, mMap);
-                    busStopManager.findBusStops(userLocation, 10000, apiKey);
+                    busStopManager.findBusStops(userLocation, 1000, apiKey);
 
                     //crie um marcador para o usuário
                     MarkerOptions userMarkerOptions = new MarkerOptions().position(userLocation).title("Você está aqui");
